@@ -37,8 +37,11 @@ class Komik extends BaseController
 
     public function create()
     {
+        // session nya bisa di sini atau di baseController
+        // session();
         $data = [
-            'judul' => 'Tambah Komik'
+            'judul' => 'Tambah Komik',
+            'validation' => \config\Services::validation()
         ];
 
         return view('tambah', $data);
@@ -46,6 +49,19 @@ class Komik extends BaseController
 
     public function save()
     {
+        // validasi
+        if (!$this->validate([
+            'judul' => [
+                'rules' => 'required|is_unique[komik.judul]',
+                'errors' => [
+                    'required' => '{field} komik harus di isi',
+                    'is_unique' => '{field} komik sudah terdaftar'
+                ]
+            ]
+        ])) {
+            $validasi = \Config\Services::validation(); //memunculkan pesan kesalahan di validasi
+            return redirect()->to('/komik/create')->withInput()->with('validation', $validasi);
+        }
         $slug = url_title($this->request->getVar('judul'), '-', true);
         $this->komikModel->save([
             'judul' => $this->request->getVar('judul'),
@@ -54,6 +70,7 @@ class Komik extends BaseController
             'penerbit' => $this->request->getVar('penerbit'),
             'sampul' => $this->request->getVar('sampul')
         ]);
+        session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
         return redirect()->to('/komik');
     }
 }

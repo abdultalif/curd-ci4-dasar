@@ -9,7 +9,10 @@
                 <div class="mb-3 row">
                     <label for="judul" class="col-sm-2 col-form-label">Judul</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="judul" name="judul" autofocus>
+                        <input type="text" class="form-control <?= ($validation->hasError('judul')) ? 'is-invalid' : ''; ?> " id="judul" name="judul" value="<?= old('judul'); ?>" autofocus>
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            <?= $validation->getError('judul'); ?>
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3 row">
