@@ -57,12 +57,25 @@ class Komik extends BaseController
                     'required' => '{field} komik harus di isi',
                     'is_unique' => '{field} komik sudah terdaftar'
                 ]
+            ],
+            'penulis' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} komik harus di isi',
+                ]
+            ],
+            'penerbit' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} komik harus di isi',
+                ]
             ]
         ])) {
             $validasi = \Config\Services::validation(); //memunculkan pesan kesalahan di validasi
             return redirect()->to('/komik/create')->withInput()->with('validation', $validasi);
         }
         $slug = url_title($this->request->getVar('judul'), '-', true);
+        // method save merupakan bawaan dari ci untuk tambah data
         $this->komikModel->save([
             'judul' => $this->request->getVar('judul'),
             'slug' => $slug,
@@ -71,6 +84,71 @@ class Komik extends BaseController
             'sampul' => $this->request->getVar('sampul')
         ]);
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
+        return redirect()->to('/komik');
+    }
+
+    public function delete($id)
+    {
+        $this->komikModel->delete(['id_komik' => $id]);
+        session()->setFlashdata('pesan', 'Data berhasil dihapus');
+        return redirect()->to('/komik');
+    }
+
+    public function edit($slug)
+    {
+        $data = [
+            'judul' => 'Tambah Komik',
+            'validation' => \config\Services::validation(),
+            'komik' => $this->komikModel->getkomik($slug)
+        ];
+
+        return view('ubah', $data);
+    }
+
+    public function update($id)
+    {
+        $komiklama = $this->komikModel->getkomik($this->request->getVar('slug'));
+        if ($komiklama['judul'] == $this->request->getVar('judul')) {
+            $rulejudul = 'required';
+        } else {
+            $rulejudul = 'required|is_unique[komik.judul]';
+        }
+        // validasi
+        if (!$this->validate([
+            'judul' => [
+                'rules' => $rulejudul,
+                'errors' => [
+                    'required' => '{field} komik harus di isi',
+                    'is_unique' => '{field} komik sudah terdaftar'
+                ]
+            ],
+            'penulis' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} komik harus di isi',
+                ]
+            ],
+            'penerbit' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} komik harus di isi',
+                ]
+            ]
+        ])) {
+            $validasi = \Config\Services::validation(); //memunculkan pesan kesalahan di validasi
+            return redirect()->to('/komik/edit/' . $this->request->getVar('slug'))->withInput()->with('validation', $validasi);
+        }
+        $slug = url_title($this->request->getVar('judul'), '-', true);
+        // method save merupakan bawaan dari ci untuk tambah data
+        $this->komikModel->save([
+            'id_komik' => $id,
+            'judul' => $this->request->getVar('judul'),
+            'slug' => $slug,
+            'penulis' => $this->request->getVar('penulis'),
+            'penerbit' => $this->request->getVar('penerbit'),
+            'sampul' => $this->request->getVar('sampul')
+        ]);
+        session()->setFlashdata('pesan', 'Data berhasil diubah.');
         return redirect()->to('/komik');
     }
 }
