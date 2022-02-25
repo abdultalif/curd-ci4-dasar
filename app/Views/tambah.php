@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-8">
             <h3 class="my-3">Form Tambah Data Komik</h3>
-            <form action="/komik/save" method="post">
+            <form action="/komik/save" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <div class="mb-3 row">
                     <label for="judul" class="col-sm-2 col-form-label">Judul</label>
@@ -35,10 +35,15 @@
                 </div>
                 <div class="mb-3 row">
                     <label for="sampul" class="col-sm-2 col-form-label">Sampul</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control <?= ($validation->hasError('sampul')) ? 'is-invalid' : ''; ?>" id="sampul" name="sampul" value="<?= old('sampul'); ?>">
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                            <?= $validation->getError('sampul'); ?>
+                    <div class="col-sm-2">
+                        <img src="/img/default.png" class="img-thumbnail img-preview">
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="custom-file">
+                            <input type="file" name="sampul" id="sampul" class="form-control <?= ($validation->hasError('sampul')) ? 'is-invalid' : ''; ?>" onchange="previewImg()">
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                                <?= $validation->getError('sampul'); ?>
+                            </div>
                         </div>
                     </div>
                 </div>

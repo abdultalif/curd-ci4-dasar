@@ -3,8 +3,8 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h3>Detail Buku Komik</h3>
-            <div class="card mb-3" style="max-width: 540px;">
+            <h3 class="my-4">Detail Buku Komik</h3>
+            <div class="card" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="/img/<?= $detail['sampul']; ?>" class="img-fluid rounded-start" alt="...">

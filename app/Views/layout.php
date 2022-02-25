@@ -17,5 +17,22 @@
 </body>
 
 <script src="<?= base_url('/js/bootstrap.min.js'); ?>"></script>
+<script>
+    function previewImg(params) {
+
+        const sampul = document.querySelector('#sampul');
+        const sampulLabel = document.querySelector('.form-control');
+        const imgPreview = document.querySelector('.img-preview');
+
+        sampulLabel.textContent = sampul.files[0].name;
+
+        const fileSampul = new FileReader();
+        fileSampul.readAsDataURL(sampul.files[0]);
+
+        fileSampul.onload = function(e) {
+            imgPreview.src = e.target.result;
+        }
+    }
+</script>
 
 </html>

@@ -69,11 +69,33 @@ class Komik extends BaseController
                 'errors' => [
                     'required' => '{field} komik harus di isi',
                 ]
+            ],
+            'sampul' => [
+                'rules' => 'max_size[sampul,1024]|is_image[sampul]|mime_in[sampul,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'max_size' => 'ukuran {field} terlalu besar',
+                    'is_image' => 'yang anda pilih bukan gambar',
+                    'mime_in' => 'yang anda pilih bukan gambar'
+                ]
             ]
         ])) {
-            $validasi = \Config\Services::validation(); //memunculkan pesan kesalahan di validasi
-            return redirect()->to('/komik/create')->withInput()->with('validation', $validasi);
+            // $validasi = \Config\Services::validation(); //memunculkan pesan kesalahan di validasi
+            // return redirect()->to('/komik/create')->withInput()->with('validation', $validasi);
+            return redirect()->to('/komik/create')->withInput();
         }
+
+        // Ambil gambar
+        $file = $this->request->getfile('sampul');
+        // jika tidak ada gambar yang di upload
+        if ($file->getError() == 4) {
+            $namasampul = 'default.png';
+        } else {
+            // generate nama sampul random
+            $namasampul = $file->getRandomName();
+            // Pindahkan file ke folder img
+            $file->move('img', $namasampul);
+        }
+
         $slug = url_title($this->request->getVar('judul'), '-', true);
         // method save merupakan bawaan dari ci untuk tambah data
         $this->komikModel->save([
@@ -81,7 +103,7 @@ class Komik extends BaseController
             'slug' => $slug,
             'penulis' => $this->request->getVar('penulis'),
             'penerbit' => $this->request->getVar('penerbit'),
-            'sampul' => $this->request->getVar('sampul')
+            'sampul' => $namasampul
         ]);
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
         return redirect()->to('/komik');
@@ -89,7 +111,16 @@ class Komik extends BaseController
 
     public function delete($id)
     {
-        $this->komikModel->delete(['id_komik' => $id]);
+        // cari gambar berdasarkan id
+        $komik = $this->komikModel->find($id);
+
+        // jika file gambar nya default.png jangan hapus
+        if ($komik['sampul'] != 'default.png') {
+            // hapus gambar
+            unlink('img/' . $komik['sampul']);
+        }
+
+        $this->komikModel->delete($id);
         session()->setFlashdata('pesan', 'Data berhasil dihapus');
         return redirect()->to('/komik');
     }
@@ -97,7 +128,7 @@ class Komik extends BaseController
     public function edit($slug)
     {
         $data = [
-            'judul' => 'Tambah Komik',
+            'judul' => 'Ubah Komik',
             'validation' => \config\Services::validation(),
             'komik' => $this->komikModel->getkomik($slug)
         ];
@@ -133,10 +164,30 @@ class Komik extends BaseController
                 'errors' => [
                     'required' => '{field} komik harus di isi',
                 ]
+            ],
+            'sampul' => [
+                'rules' => 'max_size[sampul,1024]|is_image[sampul]|mime_in[sampul,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'max_size' => 'ukuran {field} terlalu besar',
+                    'is_image' => 'yang anda pilih bukan gambar',
+                    'mime_in' => 'yang anda pilih bukan gambar'
+                ]
             ]
         ])) {
-            $validasi = \Config\Services::validation(); //memunculkan pesan kesalahan di validasi
-            return redirect()->to('/komik/edit/' . $this->request->getVar('slug'))->withInput()->with('validation', $validasi);
+            return redirect()->to('/komik/edit/' . $this->request->getVar('slug'))->withInput();
+        }
+        $lama = $this->request->getVar('lama');
+        $baru = $this->request->getFile('sampul');
+        // cek gambar apakah tetap gambar lama
+        if ($baru->getError() == 4) {
+            $sampul = $lama;
+        } else {
+            // generate nama file random
+            $sampul = $baru->getRandomName();
+            // pindahkan gambar
+            $baru->move('img', $sampul);
+            // hapus gambar lama
+            unlink('img/' . $lama);
         }
         $slug = url_title($this->request->getVar('judul'), '-', true);
         // method save merupakan bawaan dari ci untuk tambah data
@@ -146,7 +197,7 @@ class Komik extends BaseController
             'slug' => $slug,
             'penulis' => $this->request->getVar('penulis'),
             'penerbit' => $this->request->getVar('penerbit'),
-            'sampul' => $this->request->getVar('sampul')
+            'sampul' => $sampul
         ]);
         session()->setFlashdata('pesan', 'Data berhasil diubah.');
         return redirect()->to('/komik');
