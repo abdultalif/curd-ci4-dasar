@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f62c22f43ba65bbdb8e7a08f458f5b4099c8b2b6',
+        'reference' => 'a743930e1e3c79168d27c3cbfcce99caf8b271e0',
         'name' => 'codeigniter4/appstarter',
         'dev' => true,
     ),
@@ -16,16 +16,22 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f62c22f43ba65bbdb8e7a08f458f5b4099c8b2b6',
+            'reference' => 'a743930e1e3c79168d27c3cbfcce99caf8b271e0',
             'dev_requirement' => false,
         ),
+        'codeigniter4/authentication-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
         'codeigniter4/framework' => array(
-            'pretty_version' => 'v4.1.8',
-            'version' => '4.1.8.0',
+            'pretty_version' => 'v4.1.9',
+            'version' => '4.1.9.0',
             'type' => 'project',
             'install_path' => __DIR__ . '/../codeigniter4/framework',
             'aliases' => array(),
-            'reference' => 'eabd7dc9ac803ac3c7549d1dea939fe98bd0e4db',
+            'reference' => '4ec623a6b8269dd09f570ab514e5864276bb7f56',
             'dev_requirement' => false,
         ),
         'doctrine/instantiator' => array(
@@ -47,12 +53,12 @@
             'dev_requirement' => true,
         ),
         'kint-php/kint' => array(
-            'pretty_version' => '4.1.1',
-            'version' => '4.1.1.0',
+            'pretty_version' => '4.1.2',
+            'version' => '4.1.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../kint-php/kint',
             'aliases' => array(),
-            'reference' => 'e64b939f9ceb9620abd982e2a66a3289fcf4e837',
+            'reference' => 'fa53c4333cda79dc9cb002cfa029abe994d0ae00',
             'dev_requirement' => false,
         ),
         'laminas/laminas-escaper' => array(
@@ -84,6 +90,15 @@
             'replaced' => array(
                 0 => '1.10.2',
             ),
+        ),
+        'myth/auth' => array(
+            'pretty_version' => 'v1.0.1',
+            'version' => '1.0.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../myth/auth',
+            'aliases' => array(),
+            'reference' => 'c62802b9e2ce5be931f15270811d831cc2e85457',
+            'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
             'pretty_version' => 'v4.13.2',
